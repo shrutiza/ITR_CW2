@@ -114,7 +114,7 @@ class Turning(smach.State):
         rospy.loginfo("State: TURNING")
 
         #turn once and recheck
-        rate = rospy.Rate(10)
+        rate = rospy.Rate(0.5)
         #back up before turning
         for _ in range(10):
             publish_twist(self.cmd_pub, -0.1, 0.0, 0.0)

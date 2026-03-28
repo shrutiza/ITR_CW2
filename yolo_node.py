@@ -7,8 +7,6 @@ from cv_bridge import CvBridge
 from sensor_msgs.msg import Image
 from yolov4 import Detector
 from second_coursework.msg import YOLODetection
-from std_msgs.msg import String
-
 
 class YOLOv4ROSITR:
 
@@ -16,12 +14,13 @@ class YOLOv4ROSITR:
         self.cv_image = None
         self.bridge = CvBridge()
 
+        #subscribe to camera topic
         self.cam_subs = rospy.Subscriber(
-            "/usb_cam/image_raw",
+            "/camera/image",
             Image,
             self.img_callback
         )
-
+        #publish detections to topic - used by state machine
         self.detection_pub = rospy.Publisher(
             '/yolo/detections',
             YOLODetection,
@@ -43,7 +42,7 @@ class YOLOv4ROSITR:
         self.cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='passthrough')
 
     def run(self):
-        rate = rospy.Rate(1)
+        rate = rospy.Rate(0.5)
         while not rospy.is_shutdown():
             if self.cv_image is None:
                 rate.sleep()
